@@ -148,23 +148,6 @@ export default function LoginPage() {
                 Regístrate aquí
               </Link>
             </div>
-
-            {/* Demo credentials */}
-            <div className="mt-6 p-3 rounded-lg bg-muted/50 text-sm">
-              <p className="text-muted-foreground font-medium mb-2">
-                Credenciales de prueba:
-              </p>
-              <div className="space-y-1 text-xs text-muted-foreground">
-                <p>
-                  <span className="font-mono">estudiante@udla.edu.co</span> -
-                  Usuario
-                </p>
-                <p>
-                  <span className="font-mono">admin@udla.edu.co</span> -
-                  Administrador
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
