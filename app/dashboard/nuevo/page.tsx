@@ -36,7 +36,8 @@ import {
 export default function NuevoIncidentePage() {
   const router = useRouter();
   const { addIncident } = useIncidents();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const [tipo, setTipo] = useState<IncidentType | "">("");
   const [descripcion, setDescripcion] = useState("");
@@ -51,16 +52,41 @@ export default function NuevoIncidentePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp,image/heic,image/heif";
+  const MAX_IMAGE_SIZE_MB = 10;
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    e.target.value = "";
+
+    if (!file) return;
+
+    const isImage =
+      file.type.startsWith("image/") ||
+      /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name);
+
+    if (!isImage) {
+      setError("Seleccione un archivo de imagen válido.");
+      return;
     }
+
+    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+      setError(`La imagen no debe superar ${MAX_IMAGE_SIZE_MB} MB.`);
+      return;
+    }
+
+    setError("");
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.onerror = () => {
+      setError("No se pudo leer la imagen. Intente con otra foto.");
+      setImageFile(null);
+      setImagePreview(null);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleGetLocation = () => {
@@ -216,11 +242,20 @@ export default function NuevoIncidentePage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Cámara: capture abre la cámara en móvil */}
             <input
               type="file"
-              ref={fileInputRef}
-              accept="image/*"
+              ref={cameraInputRef}
+              accept={ACCEPTED_IMAGE_TYPES}
               capture="environment"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            {/* Galería: sin capture para permitir elegir fotos guardadas */}
+            <input
+              type="file"
+              ref={galleryInputRef}
+              accept="image/*"
               onChange={handleImageChange}
               className="hidden"
             />
@@ -254,7 +289,7 @@ export default function NuevoIncidentePage() {
                   type="button"
                   variant="outline"
                   className="h-32 flex-col gap-2"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => cameraInputRef.current?.click()}
                 >
                   <Camera className="w-8 h-8 text-muted-foreground" />
                   <span className="text-sm">Tomar Foto</span>
@@ -263,7 +298,7 @@ export default function NuevoIncidentePage() {
                   type="button"
                   variant="outline"
                   className="h-32 flex-col gap-2"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => galleryInputRef.current?.click()}
                 >
                   <Upload className="w-8 h-8 text-muted-foreground" />
                   <span className="text-sm">Subir desde Galería</span>
