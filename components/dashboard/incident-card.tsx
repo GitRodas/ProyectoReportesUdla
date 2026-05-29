@@ -34,7 +34,7 @@ const typeIcons: Record<string, string> = {
 export function IncidentCard({ incident, showUser = true }: IncidentCardProps) {
   return (
     <Link href={`/dashboard/incidente/${incident.id}`}>
-      <Card className="group hover:border-primary/50 transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 overflow-hidden">
+      <Card className="group hover-lift hover:border-primary/40 overflow-hidden bg-card/80 backdrop-blur-sm">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
             {/* Image */}

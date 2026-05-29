@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, Loader2, Eye, EyeOff } from "lucide-react";
+import { FadeIn } from "@/components/motion/fade-in";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -45,9 +46,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Logo and Title */}
-        <div className="text-center space-y-2">
+        <FadeIn className="text-center space-y-2">
           <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-xl bg-primary/15 flex items-center justify-center motion-float ring-1 ring-primary/20">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -67,10 +68,10 @@ export default function LoginPage() {
           <p className="text-muted-foreground text-sm">
             Sistema de Reporte de Incidentes - Universidad de la Amazonia
           </p>
-        </div>
+        </FadeIn>
 
-        {/* Login Card */}
-        <Card className="border-border/50 bg-card/50 backdrop-blur">
+        <FadeIn delay={120}>
+        <Card className="border-border/50 bg-card/60 backdrop-blur-md shadow-xl shadow-black/20 hover-lift">
           <CardHeader className="space-y-1">
             <CardTitle className="text-xl">Iniciar Sesión</CardTitle>
             <CardDescription>
@@ -125,7 +126,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="w-full btn-glow transition-transform active:scale-[0.98]" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -150,6 +151,7 @@ export default function LoginPage() {
             </div>
           </CardContent>
         </Card>
+        </FadeIn>
       </div>
     </div>
   );

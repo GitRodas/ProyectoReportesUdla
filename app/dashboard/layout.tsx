@@ -29,7 +29,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-app-mesh">
       {!supabaseReady && (
         <div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-2 text-center text-sm text-amber-200">
           Supabase no configurado: copie .env.example a .env.local y reinicie el servidor.

@@ -49,6 +49,10 @@ import {
   CHART_TICK,
   CHART_TICK_SM,
 } from "@/components/dashboard/chart-styles";
+import { FadeIn } from "@/components/motion/fade-in";
+import { AnimatedNumber } from "@/components/motion/animated-number";
+
+const CHART_ANIM = { animationBegin: 0, animationDuration: 900, isAnimationActive: true };
 
 type PeriodFilter = "7d" | "30d" | "90d" | "all";
 
@@ -125,7 +129,7 @@ export default function EstadisticasPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+      <FadeIn className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center">
             <BarChart3 className="w-5 h-5 text-primary" />
@@ -155,7 +159,7 @@ export default function EstadisticasPage() {
             Imprimir
           </Button>
         </div>
-      </div>
+      </FadeIn>
 
       <div ref={printRef} className="print-container space-y-6">
         <div className="hidden print:block mb-8">
@@ -169,7 +173,8 @@ export default function EstadisticasPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-card/80 border-border/60">
+          <FadeIn delay={60}>
+          <Card className="bg-card/80 border-border/60 hover-lift">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center">
@@ -177,13 +182,17 @@ export default function EstadisticasPage() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total</p>
-                  <p className="text-2xl font-bold tabular-nums">{stats.total}</p>
+                  <p className="text-2xl font-bold tabular-nums">
+                    <AnimatedNumber value={stats.total} />
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
+          </FadeIn>
 
-          <Card className="bg-card/80 border-status-reported/30">
+          <FadeIn delay={120}>
+          <Card className="bg-card/80 border-status-reported/30 hover-lift">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-status-reported/15 flex items-center justify-center">
@@ -192,14 +201,20 @@ export default function EstadisticasPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Reportados</p>
                   <p className="text-2xl font-bold tabular-nums text-status-reported">
-                    {stats.porEstado.find((s) => s.status === "reportado")?.value ?? 0}
+                    <AnimatedNumber
+                      value={
+                        stats.porEstado.find((s) => s.status === "reportado")?.value ?? 0
+                      }
+                    />
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
+          </FadeIn>
 
-          <Card className="bg-card/80 border-status-in-progress/30">
+          <FadeIn delay={180}>
+          <Card className="bg-card/80 border-status-in-progress/30 hover-lift">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-status-in-progress/15 flex items-center justify-center">
@@ -208,14 +223,20 @@ export default function EstadisticasPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">En proceso</p>
                   <p className="text-2xl font-bold tabular-nums text-status-in-progress">
-                    {stats.porEstado.find((s) => s.status === "en_proceso")?.value ?? 0}
+                    <AnimatedNumber
+                      value={
+                        stats.porEstado.find((s) => s.status === "en_proceso")?.value ?? 0
+                      }
+                    />
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
+          </FadeIn>
 
-          <Card className="bg-card/80 border-status-resolved/30">
+          <FadeIn delay={240}>
+          <Card className="bg-card/80 border-status-resolved/30 hover-lift">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-status-resolved/15 flex items-center justify-center">
@@ -224,24 +245,27 @@ export default function EstadisticasPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Resueltos</p>
                   <p className="text-2xl font-bold tabular-nums text-status-resolved">
-                    {stats.resueltos}
+                    <AnimatedNumber value={stats.resueltos} />
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
+          </FadeIn>
         </div>
 
         {!hasData ? (
+          <FadeIn delay={300}>
           <Card className="bg-card/80">
             <CardContent className="py-8">
               <EmptyChartState />
             </CardContent>
           </Card>
+          </FadeIn>
         ) : (
           <div className="grid lg:grid-cols-2 gap-6">
-            {/* Donut por estado */}
-            <Card className="bg-card/80 border-border/60">
+            <FadeIn delay={300}>
+            <Card className="bg-card/80 border-border/60 hover-lift">
               <CardHeader>
                 <CardTitle className="text-lg">Por estado</CardTitle>
                 <CardDescription>Distribución del periodo seleccionado</CardDescription>
@@ -264,6 +288,7 @@ export default function EstadisticasPage() {
                             dataKey="value"
                             stroke="oklch(0.13 0.01 260)"
                             strokeWidth={2}
+                            {...CHART_ANIM}
                           >
                             {stats.porEstado.map((entry) => (
                               <Cell
@@ -276,7 +301,9 @@ export default function EstadisticasPage() {
                         </PieChart>
                       </ResponsiveContainer>
                       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-3xl font-bold tabular-nums">{stats.total}</span>
+                        <span className="text-3xl font-bold tabular-nums">
+                          <AnimatedNumber value={stats.total} />
+                        </span>
                         <span className="text-xs text-muted-foreground">total</span>
                       </div>
                     </div>
@@ -291,9 +318,10 @@ export default function EstadisticasPage() {
                 )}
               </CardContent>
             </Card>
+            </FadeIn>
 
-            {/* Tasa de resolución */}
-            <Card className="bg-card/80 border-border/60">
+            <FadeIn delay={380}>
+            <Card className="bg-card/80 border-border/60 hover-lift">
               <CardHeader>
                 <CardTitle className="text-lg">Tasa de resolución</CardTitle>
                 <CardDescription>Incidentes marcados como resueltos</CardDescription>
@@ -327,7 +355,7 @@ export default function EstadisticasPage() {
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="text-4xl font-bold tabular-nums text-primary">
-                        {stats.tasaResolucion}%
+                        <AnimatedNumber value={stats.tasaResolucion} />%
                       </span>
                       <span className="text-xs text-muted-foreground mt-0.5">resueltos</span>
                     </div>
@@ -339,9 +367,10 @@ export default function EstadisticasPage() {
                 </div>
               </CardContent>
             </Card>
+            </FadeIn>
 
-            {/* Por tipo — barras horizontales */}
-            <Card className="bg-card/80 border-border/60 lg:col-span-2">
+            <FadeIn delay={460} className="lg:col-span-2">
+            <Card className="bg-card/80 border-border/60 hover-lift lg:col-span-2">
               <CardHeader>
                 <CardTitle className="text-lg">Por tipo de incidente</CardTitle>
                 <CardDescription>Categorías con al menos un reporte</CardDescription>
@@ -381,7 +410,7 @@ export default function EstadisticasPage() {
                           tickLine={false}
                         />
                         <Tooltip content={<ChartTooltip />} cursor={{ fill: "oklch(0.25 0.01 260 / 0.5)" }} />
-                        <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={28}>
+                        <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={28} {...CHART_ANIM}>
                           {stats.porTipo.map((entry) => (
                             <Cell key={entry.tipo} fill={TYPE_CHART_COLORS[entry.tipo]} />
                           ))}
@@ -399,9 +428,10 @@ export default function EstadisticasPage() {
                 )}
               </CardContent>
             </Card>
+            </FadeIn>
 
-            {/* Top ubicaciones */}
-            <Card className="bg-card/80 border-border/60 lg:col-span-2">
+            <FadeIn delay={540} className="lg:col-span-2">
+            <Card className="bg-card/80 border-border/60 hover-lift lg:col-span-2">
               <CardHeader>
                 <CardTitle className="text-lg">Top ubicaciones</CardTitle>
                 <CardDescription>Lugares con más reportes en el periodo</CardDescription>
@@ -441,7 +471,13 @@ export default function EstadisticasPage() {
                           tickLine={false}
                         />
                         <Tooltip content={<ChartTooltip />} cursor={{ fill: "oklch(0.25 0.01 260 / 0.5)" }} />
-                        <Bar dataKey="value" fill={CHART.primary} radius={[0, 6, 6, 0]} barSize={32}>
+                        <Bar
+                          dataKey="value"
+                          fill={CHART.primary}
+                          radius={[0, 6, 6, 0]}
+                          barSize={32}
+                          {...CHART_ANIM}
+                        >
                           <LabelList
                             dataKey="value"
                             position="right"
@@ -456,6 +492,7 @@ export default function EstadisticasPage() {
                 )}
               </CardContent>
             </Card>
+            </FadeIn>
           </div>
         )}
 

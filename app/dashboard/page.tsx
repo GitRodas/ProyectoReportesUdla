@@ -25,6 +25,8 @@ import {
 import Link from "next/link";
 import type { IncidentStatus, IncidentType } from "@/lib/types";
 import { INCIDENT_STATUS_LABELS, INCIDENT_TYPE_LABELS } from "@/lib/types";
+import { FadeIn } from "@/components/motion/fade-in";
+import { AnimatedNumber } from "@/components/motion/animated-number";
 
 export default function DashboardPage() {
   const { incidents } = useIncidents();
@@ -56,27 +58,28 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">
-            Bienvenido, {user?.nombre?.split(" ")[0]}
-          </h1>
-          <p className="text-muted-foreground">
-            Gestiona los incidentes reportados en el campus
-          </p>
+      <FadeIn>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold">
+              Bienvenido, {user?.nombre?.split(" ")[0]}
+            </h1>
+            <p className="text-muted-foreground">
+              Gestiona los incidentes reportados en el campus
+            </p>
+          </div>
+          <Link href="/dashboard/nuevo">
+            <Button className="gap-2 btn-glow transition-transform hover:scale-[1.02] active:scale-[0.98]">
+              <Plus className="w-4 h-4" />
+              Nuevo Reporte
+            </Button>
+          </Link>
         </div>
-        <Link href="/dashboard/nuevo">
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Nuevo Reporte
-          </Button>
-        </Link>
-      </div>
+      </FadeIn>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-status-reported/20 bg-status-reported/5">
+        <FadeIn delay={80}>
+        <Card className="border-status-reported/20 bg-status-reported/5 hover-lift">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Reportados
@@ -84,16 +87,18 @@ export default function DashboardPage() {
             <AlertTriangle className="w-4 h-4 text-status-reported" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-status-reported">
-              {stats.reportado}
+            <div className="text-2xl font-bold text-status-reported tabular-nums">
+              <AnimatedNumber value={stats.reportado} />
             </div>
             <p className="text-xs text-muted-foreground">
               Pendientes de atención
             </p>
           </CardContent>
         </Card>
+        </FadeIn>
 
-        <Card className="border-status-in-progress/20 bg-status-in-progress/5">
+        <FadeIn delay={160}>
+        <Card className="border-status-in-progress/20 bg-status-in-progress/5 hover-lift">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               En Proceso
@@ -101,16 +106,18 @@ export default function DashboardPage() {
             <Clock className="w-4 h-4 text-status-in-progress" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-status-in-progress">
-              {stats.en_proceso}
+            <div className="text-2xl font-bold text-status-in-progress tabular-nums">
+              <AnimatedNumber value={stats.en_proceso} />
             </div>
             <p className="text-xs text-muted-foreground">
               Siendo atendidos
             </p>
           </CardContent>
         </Card>
+        </FadeIn>
 
-        <Card className="border-status-resolved/20 bg-status-resolved/5">
+        <FadeIn delay={240}>
+        <Card className="border-status-resolved/20 bg-status-resolved/5 hover-lift">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Resueltos
@@ -118,18 +125,19 @@ export default function DashboardPage() {
             <CheckCircle2 className="w-4 h-4 text-status-resolved" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-status-resolved">
-              {stats.resuelto}
+            <div className="text-2xl font-bold text-status-resolved tabular-nums">
+              <AnimatedNumber value={stats.resuelto} />
             </div>
             <p className="text-xs text-muted-foreground">
               Completados
             </p>
           </CardContent>
         </Card>
+        </FadeIn>
       </div>
 
-      {/* Filters */}
-      <Card>
+      <FadeIn delay={320}>
+      <Card className="hover-lift">
         <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
@@ -188,8 +196,8 @@ export default function DashboardPage() {
           </div>
         </CardContent>
       </Card>
+      </FadeIn>
 
-      {/* Incidents List */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
@@ -209,8 +217,10 @@ export default function DashboardPage() {
           </Card>
         ) : (
           <div className="grid gap-4">
-            {filteredIncidents.map((incident) => (
-              <IncidentCard key={incident.id} incident={incident} />
+            {filteredIncidents.map((incident, index) => (
+              <FadeIn key={incident.id} delay={400 + index * 60}>
+                <IncidentCard incident={incident} />
+              </FadeIn>
             ))}
           </div>
         )}

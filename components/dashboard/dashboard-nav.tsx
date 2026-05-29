@@ -53,7 +53,7 @@ export function DashboardNav() {
     .slice(0, 2);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/70 backdrop-blur-xl transition-shadow duration-300">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-3">
